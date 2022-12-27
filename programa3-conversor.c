@@ -1,18 +1,15 @@
 #include <stdio.h>
-float conversor(float );
+float conversor (int);
 
-int main()
-{
-	float tempcelsius;
-    tempcelsius =-10;
-	for (tempcelsius=-10;tempcelsius<=50;tempcelsius+=10)
-    {
-	// nao precisa chamar a funcao antes. so precisa colocar o printf e a funcao dentro do print. pq a funcao conversor nao mantem esse valor. 	
-		printf("%f\n",conversor(tempcelsius));		
+int main(){
+	int temp_celsius;
+	for (temp_celsius=-10;temp_celsius<=50;temp_celsius+=10){
+		conversor(temp_celsius);
+		printf("%f\2t",conversor);		
 	}
+
 }
 
-float conversor (float tempcelsius)
-{
-	return (tempcelsius*(9.0/5.0))+32.;
+float conversor(int celsius){
+	return (celsius*(9.0/5))+32;
 }	
