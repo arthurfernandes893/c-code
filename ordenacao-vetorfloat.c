@@ -25,7 +25,7 @@ int main(){
 	{
 		for (int j = 0; j < quant; j++)             
 		{
-			if (pvet[j] < pvet[i])                
+			if (pvet[j] < pvet[i])   //a diferenca na ordem esta aqui//                
 			{
 				float tmp = pvet[i];         
 				pvet[i] = pvet[j];            
@@ -36,7 +36,7 @@ int main(){
 	
 // impressao //
     for(int z=0;z<quant;z++){
-        printf("%f ",pvet[z]);
+        printf("%.*f ",2, pvet[z]);
    }
    printf("\n");
 
