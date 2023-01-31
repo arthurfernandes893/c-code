@@ -1,0 +1,7 @@
+CRIAR BIBLIOTECAS 
+arquivo com header 
+arquivo com implementacao
+
+questao arquivo.c
+comando p compilar biblioteca 
+-------- gcc main-questao-arquivo.c arqlib/arq.c ----------
