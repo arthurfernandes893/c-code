@@ -1,0 +1,1 @@
+int leitora(struct funcionarios* , struct worked_h* , FILE*,  FILE*); 
