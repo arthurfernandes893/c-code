@@ -15,19 +15,20 @@ struct funcionarios{
 
 struct workedh{
     char id[13];
-    float horas;
+    int horas;
     float salario;
 };
 
 int registra_dados(struct funcionarios* , FILE* );
 int workedhours(struct workedh*, FILE*);
 int income(struct funcionarios*, struct workedh*);
+int imprime(FILE*, struct funcionarios*, struct workedh*);
 
 int main(){
     // abertura do barquivos//
     FILE* emp = fopen("Funcionarios.txt", "r");
     FILE* job = fopen("Novembro.txt", "r");
-    
+    FILE* folha = fopen("folha_pagamento.txt","w");
     //declaracao dos structs e seus apontadores//
     struct funcionarios func[10];
     struct workedh trab[10];
@@ -37,6 +38,9 @@ int main(){
     registra_dados(pfunc,emp);
     workedhours(ptrab,job);
     income(pfunc,ptrab);
+    imprime(folha, pfunc, ptrab);
+
+
     return 0;
 }
 
@@ -62,19 +66,6 @@ int registra_dados(struct funcionarios* pfunc, FILE* emp){
     //impressao dos valores na forma desejada//
         
     }
-
-    for(int j =0;j<10;j++){
-        printf("%s|",(pfunc+j)->nome);
-        printf("%s|",(pfunc+j)->matricula);
-        printf("%s|",(pfunc+j)->endereco);
-        printf("%s|",(pfunc+j)->cpf);
-        printf("%s|",(pfunc+j)->banco);
-        printf("%s|",(pfunc+j)->agencia);
-        printf("%s|",(pfunc+j)->conta);
-        printf("%.2f",((pfunc+j)->valor));
-        printf("\n");
-    }
-    printf("\n");
     return 0;
     
 }
@@ -87,44 +78,37 @@ int workedhours(struct workedh* ptrab, FILE* job){
     //ler,converter e armazenar as horas como int//
     char hours[5]; //ler 5 pois pdoe haver 3 caracteres+\n+\0//
     char* phours = hours;
-    float numaux;
-    float* pworkedhours = &numaux;
+    int numaux;
+    int* pworkedhours = &numaux;
     for(int i=0; i<10;i++){
         fgets((ptrab+i)->id,13,job);
         fgets(pbar,2,job);
         fgets(phours,5,job);
-        sscanf(phours,"%f",pworkedhours);
+        sscanf(phours,"%d",pworkedhours);
         (ptrab+i)->horas = *pworkedhours;
     }
-
-    for(int j =0; j<10; j++){
-        printf("%s\t%f\n",(ptrab+j)->id,((ptrab+j)->horas));
-    }
-  
-    printf("\n");
     return 0;
 }
 
-//usar funcao pra comprar as strings//
-
 int income(struct funcionarios* pfunc, struct workedh* ptrab){
-    //rodar busca e comparacao//
-    //for(int i =0;i<10;i++){
-        for(int j =0; j<10;j++){
-            printf("%s e %s\n",ptrab->id,(pfunc+j)->matricula);
-            printf("%d\n", (((ptrab)->id) == ((pfunc+j)->matricula)));
-            printf("%f * %f = %f\n\n", ptrab->horas,(pfunc+j)->valor, ptrab->salario);        
-            if(((ptrab)->id) == ((pfunc+j)->matricula)){
-            
-                ((ptrab)->salario) = ((ptrab)->horas)*((pfunc+j)->valor);
-                printf("%f * %f = %f\n", ptrab->horas,pfunc->valor, ptrab->salario);
-            }
+    for(int j =0;j<10;j++){
+        for(int i = 0;i<10;i++){
+            //comparacao das strings--adicionar indices dos loops pra variar nos arrays//
+            int k = strcmp((ptrab+j)->id,(pfunc+i)->matricula);
+            if(k==0){
+                //se achar uma igualdade,salario eh calculado e salvo no struct correspondente//
+                ((ptrab+j)->salario) = ((ptrab+j)->horas)*((pfunc+i)->valor);
+            }  
         }
-       // printf("%f",((ptrab)->salario));
-    //}
-    //associar valores//
-    //calcular salario//
-    //armazenar no struct//
+    }
 
+    return 0;
+}
+
+int imprime(FILE* pfolha, struct funcionarios* pfunc, struct workedh* ptrab){
+    
+    for(int i =0;i<10;i++){
+        fprintf(pfolha,"%s|%s|%s|%s|%s|%f\n",((pfunc+i)->nome), ((pfunc+i)->cpf), ((pfunc+i)->banco), ((pfunc+i)->agencia), ((pfunc+i)->conta), ((ptrab+i)->salario));
+    }
     return 0;
 }
