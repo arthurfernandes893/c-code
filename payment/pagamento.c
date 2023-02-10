@@ -3,14 +3,15 @@
 
 
 struct funcionarios{
-    char nome[52];
+    char nome[51];
     char matricula[13];
-    char endereco[68];
-    char cpf[13];
-    char banco[5];
-    char agencia[7];
-    char conta[10];
+    char endereco[66];
+    char cpf[12];
+    char banco[4];
+    char agencia[6];
+    char conta[9];
     float valor;
+    float salario;
 };
 
 struct workedh{
@@ -23,6 +24,7 @@ int registra_dados(struct funcionarios* , FILE* );
 int workedhours(struct workedh*, FILE*);
 int income(struct funcionarios*, struct workedh*);
 int imprime(FILE*, struct funcionarios*, struct workedh*);
+int ordenador(struct funcionarios*);
 
 int main(){
     // abertura do barquivos//
@@ -38,6 +40,7 @@ int main(){
     registra_dados(pfunc,emp);
     workedhours(ptrab,job);
     income(pfunc,ptrab);
+    ordenador(pfunc);
     imprime(folha, pfunc, ptrab);
 
 
@@ -45,15 +48,30 @@ int main(){
 }
 
 int registra_dados(struct funcionarios* pfunc, FILE* emp){
+   char barra[2];
+   char* pb = barra;
    for(int i =0; i<10; i++){
     //leitura das infos//
-        fgets(((pfunc+i))->nome,52,emp);
-        fgets(((pfunc+i))->matricula,13,emp);
-        fgets(((pfunc+i))->endereco,68,emp);
-        fgets(((pfunc+i))->cpf,13,emp);
-        fgets(((pfunc+i))->banco,5,emp);
-        fgets(((pfunc+i))->agencia,7,emp);
-        fgets(((pfunc+i))->conta,10,emp);
+        fgets(((pfunc+i))->nome,51,emp); //busca nome + espaco//
+        fgets(pb,2,emp); //busca o espaco//
+        
+        fgets(((pfunc+i))->matricula,13,emp); //busca 12 char-- a partir daqui tem que buscar os espacos//
+        fgets(pb,2,emp); //busca o espaco//
+
+        fgets(((pfunc+i))->endereco,66,emp); //busca o endereco//
+        fgets(pb,2,emp);
+
+        fgets(((pfunc+i))->cpf,12,emp);
+        fgets(pb,2,emp);
+
+        fgets(((pfunc+i))->banco,4,emp);
+        fgets(pb,2,emp);
+
+        fgets(((pfunc+i))->agencia,6,emp);
+        fgets(pb,2,emp);
+
+        fgets(((pfunc+i))->conta,9,emp);
+        fgets(pb,2,emp);
 
     //leitura do valor por hora e sua conversao p float//
         char aux[50];
@@ -98,6 +116,7 @@ int income(struct funcionarios* pfunc, struct workedh* ptrab){
             if(k==0){
                 //se achar uma igualdade,salario eh calculado e salvo no struct correspondente//
                 ((ptrab+j)->salario) = ((ptrab+j)->horas)*((pfunc+i)->valor);
+                ((pfunc+i)->salario) = ((ptrab+j)->salario);
             }  
         }
     }
@@ -108,7 +127,23 @@ int income(struct funcionarios* pfunc, struct workedh* ptrab){
 int imprime(FILE* pfolha, struct funcionarios* pfunc, struct workedh* ptrab){
     
     for(int i =0;i<10;i++){
-        fprintf(pfolha,"%s|%s|%s|%s|%s|%f\n",((pfunc+i)->nome), ((pfunc+i)->cpf), ((pfunc+i)->banco), ((pfunc+i)->agencia), ((pfunc+i)->conta), ((ptrab+i)->salario));
+        printf("%s|%s|%s|%s|%s|%.2f\n",((pfunc+i)->nome), ((pfunc+i)->cpf), ((pfunc+i)->banco), ((pfunc+i)->agencia), ((pfunc+i)->conta), ((pfunc+i)->salario));
     }
+    return 0;
+}
+
+int ordenador(struct funcionarios* pfunc){
+    struct funcionarios aux;
+    struct funcionarios* paux = &aux;
+    for (int i = 1; i < 10; i++) { /* 3 = qtde de palavras */
+    for (int j = 1; j < 10; j++) {
+        // verifica se tem que ser depois, se for troca de posição
+        if (strcmp((pfunc+(j - 1))->nome, (pfunc+j)->nome) > 0) {
+            aux = pfunc[j - 1];
+            pfunc[j - 1] = pfunc[j];
+            pfunc[j] = aux;
+        }
+    }
+}
     return 0;
 }
