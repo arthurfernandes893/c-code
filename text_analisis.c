@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "arqlib/arq.h"
 #include <ctype.h>
 
 struct data{
@@ -30,7 +29,7 @@ int main(){
     FILE* arq;
     arq = fopen(name,"r");
     if( arq == NULL){
-        printf("Erro: arquivo inexistente\n");
+        printf("Erro no arquivo %s\n",name);
         exit(1);
     }
 //definicao do struct//
@@ -38,7 +37,7 @@ int main(){
     struct data* ptexto = &texto;
 //chamada da funcao e impressao//
     analise(arq,ptexto);
-    printf("%d\n%d\n%d\n",texto.numchar,texto.lines,texto.totalchar);
+    printf("%d\n%d\n%d\n",texto.totalchar,texto.numchar,texto.lines-1);
 
     fclose(arq);
     return 0;
@@ -56,10 +55,11 @@ int analise(FILE* arq, struct data* text){
         if(aux == '\n'){
             (text->lines)++;
         }
-        
-        (text->totalchar)++;
-        
+        if(iscntrl(aux)){
+            (text->totalchar)++;
+        }
         aux = fgetc(arq);
     }
+    (text->totalchar) += (text->numchar);
     return 0;
 }
