@@ -13,13 +13,30 @@ struct registro{
 int insereinicio(struct registro**);
 int inserefim();
 struct registro* criaelem(char*, int, int, double);
-int imprime(struct registro**);
+int imprime(struct registro*);
+int apagalista(struct registro** p);
+int apagaelem(struct registro* elem, struct registro** head);
+struct registro* buscaelem(struct registro* p, char name[50],int age, int number,double gpa);
+int imprime_esp_elem(struct registro* head);
 
 int main(){
     struct registro* phead = NULL;
     insereinicio(&phead);
+    for(int i =0; i<3; i++){
     inserefim(&phead);
-    imprime(&phead);
+    }
+
+    char aaux[50] = "aaa";
+    char baux[50] = "bbb";
+    imprime(phead);
+    printf("\n");
+    apagaelem(buscaelem(phead,aaux,13,132,132.0),&phead);
+    imprime(phead);
+    printf("\n");
+    imprime_esp_elem(buscaelem(phead,baux,12,13,132.0));
+    apagalista(&phead);
+
+
     return 0;
 }
 
@@ -76,26 +93,65 @@ struct registro* criaelem(char* auxnome, int auxidade, int auxmatricula, double 
     return n_elem;
 }
 
-int imprime(struct registro** head){
-    //primeiro elemento//
-    //printf("%s|%d|%d|%lf\n",((*head)->nome), ((*head)->idade), ((*head)->matricula), ((*head)->cr));//
-
+int imprime(struct registro* head){
     //toda a lista//
-  
-    if(*head){ //se o elemento apontado nao for nulo, imprimir seus elementos e chamar recursivamente pra rodar a lista//
-        printf("%s|%d|%d|%lf\n",((*head)->nome), ((*head)->idade), ((*head)->matricula), ((*head)->cr));        
-        imprime(&((*head)->next));
+    if(head){ //se o elemento apontado nao for nulo, imprimir seus elementos e chamar recursivamente pra rodar a lista//
+        printf("%s|%d|%d|%lf\n",((head)->nome), ((head)->idade), ((head)->matricula), ((head)->cr));        
+        imprime(((head)->next));
     }
-    
-    //elemento em espefico//
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//    
-    int index = 2;
-     //chama recursivamente o numero de vezes//
-        imprime(&((*head)->next));
-        if(i == index-1){ //quando chegar nas rodagens desejadas imprimir e sair da funcao//
-            printf("%s|%d|%d|%lf\n",((*head)->nome), ((*head)->idade), ((*head)->matricula), ((*head)->cr));
-        }
-    
-    
+    else{
+        printf("FIM DA LISTA\n");
+    }
     return 0;
 }
+
+int imprime_esp_elem(struct registro* head){
+    printf("%s|%d|%d|%lf\n",((head)->nome), ((head)->idade), ((head)->matricula), ((head)->cr));
+
+
+
+    return 0;
+}
+
+int apagalista(struct registro** p){ //usa indirecao dupla porque precisa acessar as infos e no fim acessar phead//
+    //percorrer a lista ate o ultimo e ir desalocando do ultimo ao primeiro//
+    if(*p){
+        apagalista(&(*p)->next);
+        free(*p);
+        (*p) = NULL;     
+    }
+    return 0;
+}
+
+int apagaelem(struct registro* elem, struct registro** head){ 
+    if(*head){
+        if((*head) == elem){
+            *head = elem->next;
+            free(elem);
+        }
+        else{
+            apagaelem(elem, &(*head)->next);
+        }
+    }
+    else{
+        printf("elemento nao encontrado");
+    }
+    return 0;
+}
+
+struct registro* buscaelem(struct registro* p, char name[50],int age, int number,double gpa){
+    if(p){  //se nao for nulo, procure//
+        if((strcmp((p)->nome,name)) && ((p)->idade == age) && ((p)->matricula == number) && ((p)->cr == gpa)){
+            //comparar os campos do elemento e se for retorna o apontador pra esse elemento//
+            return (p);
+        }
+ 
+        else{
+            buscaelem((p->next), name,age, number,gpa);
+        }
+    }
+    else{
+        return NULL;
+    }
+}
+
