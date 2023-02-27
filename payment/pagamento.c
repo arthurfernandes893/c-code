@@ -54,7 +54,7 @@ int registra_dados(struct funcionarios* pfunc, FILE* emp){
     //leitura das infos//
         fgets(((pfunc+i))->nome,51,emp); //busca nome + espaco//
         fgets(pb,2,emp); //busca o espaco//
-        
+            
         fgets(((pfunc+i))->matricula,13,emp); //busca 12 char-- a partir daqui tem que buscar os espacos//
         fgets(pb,2,emp); //busca o espaco//
 
